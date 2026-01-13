@@ -1,9 +1,11 @@
-import { motion } from "framer-motion";
+import React from "react";
 
-export default function ViolationTable({ violations, onView }) {
+const API_BASE = "http://localhost:5000";
+
+export default function ViolationTable({ violations }) {
   return (
-    <div className="violations-table glass-card">
-      <table>
+    <div className="table-container">
+      <table className="violation-table">
         <thead>
           <tr>
             <th>Vehicle ID</th>
@@ -17,45 +19,33 @@ export default function ViolationTable({ violations, onView }) {
         </thead>
 
         <tbody>
-          {violations.length > 0 ? (
-            violations.map((v, i) => (
-              <motion.tr
-                key={i}
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.25 + i * 0.02 }}
-              >
-                <td className="vehicle-id">#{v.vehicle_id}</td>
-                <td>
-                  <span className="vehicle-type">{v.vehicle_type}</span>
-                </td>
-                <td className="speed-value">{v.speed} mph</td>
-                <td>{v.speed_limit} mph</td>
-                <td className="over-speed">+{v.over_speed_by} mph</td>
-                <td className="timestamp">
-                  {new Date(v.timestamp).toLocaleString()}
-                </td>
-                <td>
-                  {v.image_filename ? (
-                    <button
-                      className="view-btn"
-                      onClick={() => onView(v.image_filename)}
-                    >
-                      View
-                    </button>
-                  ) : (
-                    "—"
-                  )}
-                </td>
-              </motion.tr>
-            ))
-          ) : (
-            <tr>
-              <td colSpan={7} className="no-data-row">
-                No violations recorded yet.
+          {violations.map((v, index) => (
+            <tr key={index}>
+              <td>#{v.vehicle_id}</td>
+              <td>{v.vehicle_type}</td>
+              <td className="speed">{v.speed} mph</td>
+              <td>{v.speed_limit} mph</td>
+              <td className="over">
+                +{(v.speed - v.speed_limit).toFixed(2)} mph
+              </td>
+              <td>{new Date(v.timestamp).toLocaleString()}</td>
+
+              <td>
+                {v.image ? (
+                  <a
+                    href={`${API_BASE}/uploads/${v.image}`}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="view-btn"
+                  >
+                    View
+                  </a>
+                ) : (
+                  "—"
+                )}
               </td>
             </tr>
-          )}
+          ))}
         </tbody>
       </table>
     </div>

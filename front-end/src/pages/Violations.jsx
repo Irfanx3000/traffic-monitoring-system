@@ -12,7 +12,7 @@ export default function Violations() {
   const { violations } = data;
 
   const filteredViolations = violations.filter((v) =>
-    v.vehicle_id.toString().includes(searchTerm.toLowerCase())
+    v.vehicle_id.toString().includes(searchTerm)
   );
 
   return (
@@ -57,40 +57,45 @@ export default function Violations() {
 
           <tbody>
             {filteredViolations.length > 0 ? (
-              filteredViolations.map((v, index) => (
-                <tr key={index}>
-                  <td>#{v.vehicle_id}</td>
+              filteredViolations.map((v, index) => {
+                // ✅ FIX: Use correct field & route
+                const imageUrl = v.image
+                  ? `http://localhost:5000/uploads/${v.image}`
+                  : null;
 
-                  <td>
-                    <span className="tag">{v.vehicle_type}</span>
-                  </td>
+                return (
+                  <tr key={index}>
+                    <td>#{v.vehicle_id}</td>
 
-                  <td className="red">{v.speed} mph</td>
+                    <td>
+                      <span className="tag">{v.vehicle_type}</span>
+                    </td>
 
-                  <td>{v.speed_limit} mph</td>
+                    <td className="red">{v.speed} km/h</td>
 
-                  <td className="yellow">+{v.over_speed_by} mph</td>
+                    <td>{v.speed_limit} km/h</td>
 
-                  <td>{new Date(v.timestamp).toLocaleString()}</td>
+                    <td className="yellow">
+                      +{v.over_speed_by?.toFixed?.(2) ?? v.over_speed_by} km/h
+                    </td>
 
-                  <td>
-                    {v.image_filename ? (
-                      <button
-                        className="view-btn"
-                        onClick={() =>
-                          window.open(
-                            `http://localhost:5000/api/images/${v.image_filename}`
-                          )
-                        }
-                      >
-                        View
-                      </button>
-                    ) : (
-                      "—"
-                    )}
-                  </td>
-                </tr>
-              ))
+                    <td>{new Date(v.timestamp).toLocaleString()}</td>
+
+                    <td>
+                      {imageUrl ? (
+                        <button
+                          className="view-btn"
+                          onClick={() => window.open(imageUrl, "_blank")}
+                        >
+                          View
+                        </button>
+                      ) : (
+                        "—"
+                      )}
+                    </td>
+                  </tr>
+                );
+              })
             ) : (
               <tr>
                 <td colSpan="7" style={{ textAlign: "center", padding: "30px" }}>

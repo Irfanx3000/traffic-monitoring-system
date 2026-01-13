@@ -1,6 +1,6 @@
 import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-
+import Upload from "./pages/Upload";
 import { DataProvider } from "./layout/DataContext";
 import MainLayout from "./layout/MainLayout";
 
@@ -17,10 +17,9 @@ export default function App() {
             
             <Route path="/" element={<Dashboard />} />
             <Route path="/dashboard" element={<Dashboard />} />
-
             <Route path="/violations" element={<Violations />} />
             <Route path="/emergency" element={<Emergency />} />
-
+            <Route path="/upload" element={<Upload />} />
           </Route>
         </Routes>
       </DataProvider>

@@ -2,6 +2,11 @@ import { Shield } from "lucide-react";
 import { motion } from "framer-motion";
 
 export default function EmergencyCard({ item, API_BASE }) {
+  // ✅ Build image URL safely
+  const imageUrl = item?.image
+    ? `http://localhost:5000/uploads/${item.image}`
+    : null;
+
   return (
     <motion.div
       className="emergency-card glass-card"
@@ -16,13 +21,21 @@ export default function EmergencyCard({ item, API_BASE }) {
         <span className="exempted-badge">EXEMPTED</span>
       </div>
 
-      {item.image_filename && (
+      {/* ✅ IMAGE (FIXED, SAME UI) */}
+      {imageUrl ? (
         <div className="emergency-image-container">
           <img
-            src={`${API_BASE}/emergency-images/${item.image_filename}`}
+            src={imageUrl}
             className="emergency-vehicle-image"
             alt="Emergency Vehicle"
+            onError={(e) => {
+              e.currentTarget.style.display = "none";
+            }}
           />
+        </div>
+      ) : (
+        <div className="emergency-image-container no-image">
+          <span>No Image</span>
         </div>
       )}
 

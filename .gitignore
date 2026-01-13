@@ -1,49 +1,32 @@
-# Node modules
-node_modules/
+# =====================
+# Python / Backend
+# =====================
+backend/__pycache__/
+backend/*.pyc
+backend/*.pyo
+backend/.env
 
-# Python caches
-__pycache__/
-*.pyc
-*.pyo
-*.pyd
+backend/uploads/
+backend/runs/
 
-# Environment files
-.env
-*.env
+# YOLO models (NEVER COMMIT)
+models/
+backend/models/
 
-# Build folders
-build/
-dist/
-.cache/
+# =====================
+# Frontend
+# =====================
+front-end/node_modules/
+front-end/build/
+front-end/dist/
 
-# Logs
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-*.log
+# =====================
+# Archives
+# =====================
+*.zip
 
-# OS files
+# =====================
+# OS
+# =====================
 .DS_Store
 Thumbs.db
-
-# IDE/Editor
-.vscode/
-.idea/
-
-# Git
-.git/
-
-# Large videos (prevent GitHub size issues)
-videos/*.mp4
-videos/*.avi
-videos/*.mov
-
-# Virtual environments
-venv/
-env/
-
-# Temporary files
-*.tmp
-*.swp
-
-
