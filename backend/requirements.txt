@@ -1,9 +1,0 @@
-flask
-flask-cors
-pymongo
-ultralytics
-opencv-python-headless
-numpy
-torch
-torchvision
-werkzeug

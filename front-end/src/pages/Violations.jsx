@@ -121,7 +121,7 @@ export default function Violations() {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedImage, setSelectedImage] = useState(null);
 
-const violations = data?.violations || [];
+const violations = useMemo(() => data?.violations || [], [data]);
 
   /* ---------------- FILTER ---------------- */
   const filteredViolations = useMemo(() => {
