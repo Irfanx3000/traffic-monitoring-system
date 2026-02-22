@@ -114,7 +114,7 @@ import { DataContext } from "../layout/DataContext";
 import { Search } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
-const API_BASE = "http://localhost:5000";
+const API_BASE = "";
 
 export default function Violations() {
   const data = useContext(DataContext);
