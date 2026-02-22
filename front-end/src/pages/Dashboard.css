@@ -1,3 +1,6 @@
+/* =====================================================
+   DASHBOARD CONTAINER
+===================================================== */
 .dashboard-container {
   padding: 24px;
   display: flex;
@@ -5,7 +8,9 @@
   gap: 28px;
 }
 
-/* KPI */
+/* =====================================================
+   KPI CARDS (Top stats)
+===================================================== */
 .kpi-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -13,45 +18,66 @@
 }
 
 .kpi-card {
-  background: #fafafa;
-  border-radius: 18px;
+  background: var(--bg-card);
+  border-radius: 16px;
   padding: 20px;
   text-align: center;
-  box-shadow: 0 12px 30px rgba(0,0,0,0.08);
+  border: 1px solid var(--border-soft);
+  box-shadow: var(--shadow-soft);
+  transition: .2s;
 }
 
+.kpi-card:hover{
+  transform: translateY(-3px);
+}
+
+/* icon */
 .kpi-card svg {
   margin-bottom: 10px;
+  color: var(--accent-primary);
 }
 
+/* label */
 .kpi-card p {
-  color: #555;
+  color: var(--text-dim);
+  font-size: 14px;
 }
 
+/* value */
 .kpi-card h2 {
   font-size: 32px;
   margin-top: 6px;
+  color: var(--text-main);
+  font-weight: 700;
 }
 
-/* ANALYTICS */
+/* =====================================================
+   ANALYTICS SECTION
+===================================================== */
 .analytics-grid {
   display: grid;
   grid-template-columns: 2fr 1fr;
   gap: 18px;
 }
 
-/* MONITORING */
+/* =====================================================
+   MONITORING (camera + alerts)
+===================================================== */
 .monitoring-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 18px;
 }
 
+/* =====================================================
+   GENERIC CARD
+===================================================== */
 .card {
-  background: #ffffff;
-  border-radius: 20px;
+  background: var(--bg-card);
+  border-radius: 16px;
   padding: 22px;
-  box-shadow: 0 14px 32px rgba(0,0,0,0.08);
+  border: 1px solid var(--border-soft);
+  box-shadow: var(--shadow-soft);
 
   display: flex;
   flex-direction: column;
@@ -62,25 +88,32 @@
   min-height: 320px;
 }
 
+/* header */
 .card-header {
   display: flex;
   justify-content: space-between;
   margin-bottom: 12px;
+  align-items: center;
 }
 
+/* camera image */
 .card img {
   width: 100%;
-  border-radius: 14px;
+  border-radius: 12px;
   margin-bottom: 10px;
+  border: 1px solid #262b36;
 }
 
+/* empty text */
 .empty {
   text-align: center;
-  color: #999;
+  color: var(--text-dim);
   margin-top: 40px;
 }
 
-/* GAUGE */
+/* =====================================================
+   SPEED GAUGE
+===================================================== */
 .card .gauge {
   flex: 1;
   display: flex;
@@ -95,36 +128,66 @@
   height: 100px;
 }
 
-/* Gauge background arc */
+/* background arc */
 .gauge circle {
   fill: none;
-  stroke: #e5e5e5;
+  stroke: #2b313c;
   stroke-width: 14;
 }
 
-/* Gauge progress */
+/* overspeed progress arc */
 .gauge-progress {
-  stroke: #ef4444;
+  stroke: var(--accent-danger);
   stroke-width: 14;
   stroke-linecap: round;
   transform: rotate(-180deg);
   transform-origin: center;
 }
 
-/* Percentage text */
+/* percentage text */
 .gauge span {
   margin-top: -10px;
   font-size: 26px;
   font-weight: 700;
-  color: #111827;
+  color: var(--text-main);
 }
 
-/* RESPONSIVE */
+/* =====================================================
+   ALERT COLOR STATES (VERY IMPORTANT)
+===================================================== */
+
+/* safe speed */
+.speed-safe .gauge-progress{
+  stroke: var(--accent-safe);
+}
+
+/* warning zone */
+.speed-warning .gauge-progress{
+  stroke: var(--accent-primary);
+}
+
+/* overspeed */
+.speed-danger .gauge-progress{
+  stroke: var(--accent-danger);
+}
+
+/* =====================================================
+   RESPONSIVE
+===================================================== */
 @media (max-width: 1000px) {
-  .kpi-grid,
+
+  .kpi-grid{
+    grid-template-columns: repeat(2,1fr);
+  }
+
   .analytics-grid,
-  .monitoring-grid {
+  .monitoring-grid{
     grid-template-columns: 1fr;
-    min-height: 320px;
+  }
+}
+
+@media (max-width: 600px){
+  .kpi-grid{
+    grid-template-columns: 1fr;
   }
 }

@@ -13,14 +13,14 @@ export default function Sidebar() {
       ======================= */}
       <div className="sidebar-header">
         <div className="logo">
-          <AlertTriangle size={26} />
+          <AlertTriangle size={26} className="alert-icon" />
         </div>
+
         <div className="logo-text">
-          <h1>TrafficWatch</h1>
+          <h1>Speed Detection</h1>
           <p>Monitoring System</p>
         </div>
       </div>
-
       {/* =======================
           NAVIGATION
       ======================= */}

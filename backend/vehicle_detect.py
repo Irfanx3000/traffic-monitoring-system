@@ -36,7 +36,7 @@ SPEED_LIMIT_KMPH = 40
 VEHICLE_CLASSES = ["car", "truck", "bus", "motorcycle"]
 EMERGENCY_CLASSES = ["emergency"]
 
-FPS_LIMIT = 15  # ⛔ prevent CPU overload
+FPS_LIMIT = 50  # ⛔ prevent CPU overload
 
 # =====================================================
 # DATABASE

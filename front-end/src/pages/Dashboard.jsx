@@ -189,6 +189,7 @@ import {
   PieChart,
   Pie,
   Cell,
+  Legend,
 } from "recharts";
 
 import {
@@ -203,13 +204,23 @@ import "./Dashboard.css";
 
 const API_BASE = "http://localhost:5000";
 
-/* ✅ STABLE COLOR MAPPING (VERY IMPORTANT) */
+/* ================= FIXED VEHICLE COLORS ================= */
 const VEHICLE_COLORS = {
-  car: "#3b82f6",          // blue
-  truck: "#f97316",        // orange
-  bus: "#22c55e",          // green
-  motorcycle: "#8b5cf6",   // purple
-  emergency: "#ef4444",    // red
+  car: "#3b82f6",
+  bike: "#22c55e",
+  motorcycle: "#22c55e",
+  motorbike: "#22c55e",
+  truck: "#f59e0b",
+  bus: "#ef4444",
+  emergency: "#8b5cf6",
+  ambulance: "#8b5cf6",
+  other: "#94a3b8",
+};
+
+/* Normalize vehicle type */
+const normalizeType = (type) => {
+  if (!type) return "other";
+  return type.toLowerCase().trim();
 };
 
 export default function Dashboard() {
@@ -226,6 +237,7 @@ export default function Dashboard() {
     100
   );
 
+  /* Latest violation */
   const latest = useMemo(
     () => (recentViolations.length ? recentViolations[0] : null),
     [recentViolations]
@@ -235,31 +247,23 @@ export default function Dashboard() {
     ? `${API_BASE}/uploads/${latest.image}`
     : null;
 
+  /* Gauge color logic */
+  const gaugeColor =
+    violationPercentage > 60
+      ? "#ef4444"
+      : violationPercentage > 30
+      ? "#f59e0b"
+      : "#22c55e";
+
   return (
     <div className="dashboard-container">
 
       {/* ================= KPIs ================= */}
       <div className="kpi-grid">
-        <Kpi
-          icon={<AlertTriangle />}
-          label="Total Violations"
-          value={statistics.total_violations ?? 0}
-        />
-        <Kpi
-          icon={<Activity />}
-          label="Avg Speed"
-          value={`${avgSpeed.toFixed(1)} km/h`}
-        />
-        <Kpi
-          icon={<Shield />}
-          label="Emergency Vehicles"
-          value={statistics.emergency_vehicles ?? 0}
-        />
-        <Kpi
-          icon={<Car />}
-          label="Today's Detections"
-          value={statistics.recent_detections ?? 0}
-        />
+        <Kpi icon={<AlertTriangle color="#ef4444" />} label="Total Violations" value={statistics.total_violations ?? 0} />
+        <Kpi icon={<Activity color="#3b82f6" />} label="Avg Speed" value={`${avgSpeed.toFixed(1)} km/h`} />
+        <Kpi icon={<Shield color="#22c55e" />} label="Emergency Vehicles" value={statistics.emergency_vehicles ?? 0} />
+        <Kpi icon={<Car color="#f59e0b" />} label="Today's Detections" value={statistics.recent_detections ?? 0} />
       </div>
 
       {/* ================= ANALYTICS ================= */}
@@ -275,16 +279,23 @@ export default function Dashboard() {
           {dailyAnalytics.length ? (
             <ResponsiveContainer width="100%" height={260}>
               <LineChart data={dailyAnalytics}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="_id" />
-                <YAxis />
-                <Tooltip />
+                <CartesianGrid stroke="#2b313c" />
+                <XAxis dataKey="_id" stroke="#9ca3af" />
+                <YAxis stroke="#9ca3af" />
+                <Tooltip
+                  contentStyle={{
+                    background: "#171a21",
+                    border: "1px solid #262b36",
+                    color: "#e2e8f0",
+                  }}
+                />
                 <Line
                   type="monotone"
                   dataKey="count"
                   stroke="#ef4444"
                   strokeWidth={3}
                   dot={false}
+                  isAnimationActive={false}
                 />
               </LineChart>
             </ResponsiveContainer>
@@ -305,15 +316,28 @@ export default function Dashboard() {
                   nameKey="_id"
                   innerRadius={60}
                   outerRadius={95}
+                  isAnimationActive={false}
                 >
-                  {vehicleTypes.map((entry, i) => (
-                    <Cell
-                      key={`cell-${i}`}
-                      fill={VEHICLE_COLORS[entry._id] || "#94a3b8"}
-                    />
-                  ))}
+                  {vehicleTypes.map((entry, i) => {
+                    const type = normalizeType(entry._id);
+                    return (
+                      <Cell
+                        key={`cell-${i}`}
+                        fill={VEHICLE_COLORS[type] || VEHICLE_COLORS.other}
+                      />
+                    );
+                  })}
                 </Pie>
-                <Tooltip />
+
+                <Legend wrapperStyle={{ color: "#e2e8f0" }} />
+
+                <Tooltip
+                  contentStyle={{
+                    background: "#171a21",
+                    border: "1px solid #262b36",
+                    color: "#e2e8f0",
+                  }}
+                />
               </PieChart>
             </ResponsiveContainer>
           ) : (
@@ -333,13 +357,13 @@ export default function Dashboard() {
               <path
                 d="M20 100 A80 80 0 0 1 180 100"
                 fill="none"
-                stroke="#e5e7eb"
+                stroke="#2b313c"
                 strokeWidth="12"
               />
               <path
                 d="M20 100 A80 80 0 0 1 180 100"
                 fill="none"
-                stroke="#22c55e"
+                stroke={gaugeColor}
                 strokeWidth="12"
                 strokeDasharray={`${violationPercentage * 2.5} 250`}
               />
@@ -357,18 +381,11 @@ export default function Dashboard() {
           {latest ? (
             <>
               {latestImage && (
-                <img
-                  src={latestImage}
-                  alt="latest detection"
-                  className="latest-image"
-                />
+                <img src={latestImage} alt="latest detection" className="latest-image" />
               )}
               <p><strong>Type:</strong> {latest.vehicle_type}</p>
               <p><strong>Speed:</strong> {latest.speed} km/h</p>
-              <p>
-                <strong>Time:</strong>{" "}
-                {new Date(latest.timestamp).toLocaleString()}
-              </p>
+              <p><strong>Time:</strong> {new Date(latest.timestamp).toLocaleString()}</p>
             </>
           ) : (
             <p className="empty">No detection yet</p>
@@ -379,7 +396,7 @@ export default function Dashboard() {
   );
 }
 
-/* ================= KPI CARD ================= */
+/* KPI */
 function Kpi({ icon, label, value }) {
   return (
     <div className="kpi-card">
